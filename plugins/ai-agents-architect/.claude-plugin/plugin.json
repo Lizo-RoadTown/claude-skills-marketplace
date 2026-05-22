@@ -1,7 +1,7 @@
 {
   "name": "ai-agents-architect",
   "description": "Decision framework for agent architecture — single vs multi-agent, ReAct vs Plan-and-Execute, autonomy spectrum, when to introduce an orchestrator.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": {
     "name": "Liz Osborn"
   },

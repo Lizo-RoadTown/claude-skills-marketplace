@@ -5,7 +5,7 @@ license: Apache-2.0
 compatibility: Agent Skills compatible (Claude Code, Cursor, Gemini CLI, OpenCode, and others — see agentskills.io/clients)
 metadata:
   author: Liz Osborn
-  version: "0.1.1"
+  version: "0.1.2"
   homepage: "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
 ---
 
@@ -149,9 +149,25 @@ it falls into.
 
 ## Related skills
 
-- **`agent-orchestrator`** — once you've decided you need multiple agents, that skill covers coordination patterns (handoffs, supervisor/worker, peer-to-peer)
-- **`agent-memory-systems`** — for designing the persistence layer once architecture is decided
-- **`claude-api`** — Anthropic's official SDK skill, helpful for the implementation step after architecture is settled
+These three are not part of this marketplace — they're external skills
+this one points to once you've made the architectural decisions it helps
+with. Use them in sequence: architecture → orchestration → memory →
+implementation.
+
+- **Multi-agent coordination patterns.** Once you've decided you need
+  multiple agents, you need a coordination layer. Public options:
+  - [AWS Labs `cli-agent-orchestrator`](https://github.com/awslabs/cli-agent-orchestrator) — Python library for the Handoff / Assign / send_message primitives
+  - [muratcankoylan `multi-agent-patterns`](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering) — Claude Code skill in the Context Engineering pack
+  - Project-starter docs: <https://github.com/Lizo-RoadTown/project-starter/blob/main/site/docs/variants/agent-orchestrator.html>
+
+- **Memory system design.** For the persistence layer once architecture is decided. Public options:
+  - [sickn33 `agent-memory-systems`](https://github.com/sickn33/antigravity-awesome-skills) — Claude Code skill covering CoALA framework, vector stores, chunking, consolidation
+  - Project-starter docs: <https://github.com/Lizo-RoadTown/project-starter/blob/main/site/docs/variants/agent-memory-systems.html>
+
+- **Anthropic SDK helper (`claude-api`).** Anthropic's official skill for
+  the implementation step after architecture is settled. Install via:
+  `/plugin marketplace add anthropics/skills` then
+  `/plugin install claude-api@anthropic-agent-skills`
 
 ---
 

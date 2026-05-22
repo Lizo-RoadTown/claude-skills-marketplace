@@ -11,6 +11,18 @@ or any skill).
 
 ## [Unreleased]
 
+## [0.1.2] — 2026-05-21
+
+### Fixed
+
+- **`ai-agents-architect` v0.1.2** — fixed the "Related skills" section of
+  the SKILL.md, which previously implied that `agent-orchestrator`,
+  `agent-memory-systems`, and `claude-api` lived in this marketplace. They
+  don't. Replaced bare references with proper attribution to their actual
+  sources (AWS Labs, muratcankoylan, sickn33, anthropics/skills) plus
+  install commands or repo URLs. Project-starter docs already had this
+  right — the bug was only in this skill's cross-reference list.
+
 ## [0.1.1] — 2026-05-21
 
 ### Fixed
