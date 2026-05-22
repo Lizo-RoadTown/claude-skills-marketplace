@@ -1,0 +1,56 @@
+name: "New skill proposal"
+description: "Propose a new skill for this marketplace."
+title: "[skill] "
+labels: ["proposal", "needs-discussion"]
+assignees: ["Lizo-RoadTown"]
+body:
+  - type: input
+    id: skill-name
+    attributes:
+      label: "Proposed skill name"
+      description: "Kebab-case, lowercase, must be unique in this marketplace and reasonably specific."
+      placeholder: "my-new-skill"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "One-sentence description"
+      description: "Following agentskills.io spec — describe both what it does AND when to use it."
+      placeholder: "Extracts X from Y when the user asks about Z."
+    validations:
+      required: true
+
+  - type: textarea
+    id: anti-patterns
+    attributes:
+      label: "What does it refuse to produce?"
+      description: "Skills with no opinion don't earn a slot. List at least 2-3 anti-patterns this skill actively refuses."
+    validations:
+      required: true
+
+  - type: textarea
+    id: prior-art
+    attributes:
+      label: "Have you checked the existing-clients catalog for prior art?"
+      description: "Check https://agentskills.io/clients and the Anthropic skill registry. Note any near-matches and why this proposal is distinct."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: authorship
+    attributes:
+      label: "Authorship"
+      options:
+        - "I'd author it"
+        - "I'm proposing it for someone else to author"
+        - "I'd like Liz to author it"
+    validations:
+      required: true
+
+  - type: textarea
+    id: target-clients
+    attributes:
+      label: "Target clients"
+      description: "Which Agent Skills clients is this aimed at? Most skills work everywhere, but some are framework-specific."

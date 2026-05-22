@@ -1,0 +1,79 @@
+name: "Bug report"
+description: "Something in an existing skill behaves incorrectly or breaks the install flow."
+title: "[bug] "
+labels: ["bug", "needs-triage"]
+assignees: ["Lizo-RoadTown"]
+body:
+  - type: dropdown
+    id: skill
+    attributes:
+      label: "Which skill?"
+      description: "Which skill is affected?"
+      options:
+        - "onboarding-psychologist"
+        - "ai-agents-architect"
+        - "marketplace catalog / install flow itself"
+        - "other (please describe)"
+    validations:
+      required: true
+
+  - type: input
+    id: skill-version
+    attributes:
+      label: "Skill version"
+      description: "Check the `version` field in the skill's plugin.json or run `/plugin list`."
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: client
+    attributes:
+      label: "Which Agent Skills client?"
+      options:
+        - "Claude Code"
+        - "Cursor"
+        - "Gemini CLI"
+        - "OpenCode"
+        - "Junie"
+        - "Goose"
+        - "Amp"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: "What happened?"
+      description: "Describe the actual behavior. Include exact prompts if helpful."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: "What did you expect?"
+      description: "Describe the behavior you expected based on the SKILL.md."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: "Steps to reproduce"
+      placeholder: |
+        1. Install via `/plugin install ...`
+        2. Ask Claude: "..."
+        3. Observe: ...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: validated
+    attributes:
+      label: "Have you run `skills-ref validate` on the affected skill?"
+      options:
+        - label: "Yes, validation passes"
+        - label: "No, I haven't run it"
+        - label: "Yes, and validation also fails (paste output in 'what happened')"

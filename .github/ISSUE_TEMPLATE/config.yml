@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question about Claude Code itself
+    url: https://github.com/anthropics/claude-code/issues
+    about: For questions about Claude Code, not specific to this marketplace's skills, file with Anthropic.
+  - name: Question about the Agent Skills standard
+    url: https://github.com/agentskills/agentskills/discussions
+    about: Questions about the open SKILL.md format itself belong on the agentskills.io project.
+  - name: Security vulnerability
+    url: https://github.com/Lizo-RoadTown/claude-skills-marketplace/security/advisories/new
+    about: Report security issues privately, not as a public issue. See SECURITY.md.

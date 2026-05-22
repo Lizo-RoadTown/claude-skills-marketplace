@@ -1,0 +1,47 @@
+# CITATION.cff — Citation File Format 1.2.0
+# Tells GitHub and academic tools how to cite this work.
+# See https://citation-file-format.github.io/
+cff-version: 1.2.0
+message: "If you use these skills in your work, please cite them as below."
+title: "Lizo's Skills Marketplace"
+abstract: >-
+  A curated set of Agent Skills authored by Liz Osborn, following the open
+  agentskills.io standard. Includes onboarding-psychologist (a behavioral-
+  research framework for first-time-user flows) and ai-agents-architect
+  (a decision framework for autonomous-agent architecture). Compatible with
+  Claude Code, Cursor, Gemini CLI, OpenCode, Junie, Goose, Amp, and other
+  Agent-Skills-compliant clients.
+type: software
+authors:
+  - given-names: Liz
+    family-names: Osborn
+    alias: Lizo-RoadTown
+    orcid: ""
+repository-code: "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
+url: "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
+license: Apache-2.0
+version: 0.1.0
+date-released: 2026-05-21
+keywords:
+  - claude-code
+  - agent-skills
+  - cursor
+  - gemini-cli
+  - opencode
+  - ai-agents
+  - onboarding
+  - ux
+  - behavioral-design
+  - agent-architecture
+  - llm
+references:
+  - type: software
+    title: "Agent Skills Specification"
+    authors:
+      - name: "Anthropic"
+    url: "https://agentskills.io/specification"
+  - type: software
+    title: "Claude Code Plugin Marketplaces"
+    authors:
+      - name: "Anthropic"
+    url: "https://docs.claude.com/en/docs/claude-code/plugin-marketplaces"

@@ -1,0 +1,11 @@
+{
+  "name": "ai-agents-architect",
+  "description": "Decision framework for agent architecture — single vs multi-agent, ReAct vs Plan-and-Execute, autonomy spectrum, when to introduce an orchestrator.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Liz Osborn"
+  },
+  "homepage": "https://github.com/Lizo-RoadTown/claude-skills-marketplace",
+  "license": "Apache-2.0",
+  "keywords": ["agents", "architecture", "orchestration", "multi-agent", "react", "plan-and-execute", "autonomy"]
+}

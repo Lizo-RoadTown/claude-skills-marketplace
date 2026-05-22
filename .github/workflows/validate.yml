@@ -1,0 +1,103 @@
+name: validate
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-skills:
+    name: "skills-ref validate"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: "Find all SKILL.md files and validate each"
+        run: |
+          set -e
+          found=0
+          while IFS= read -r -d '' dir; do
+            found=$((found+1))
+            echo "::group::Validating $dir"
+            npx --yes skills-ref validate "$dir"
+            echo "::endgroup::"
+          done < <(find plugins -name SKILL.md -printf '%h\0')
+          if [ "$found" -eq 0 ]; then
+            echo "No SKILL.md files found under plugins/"
+            exit 1
+          fi
+          echo "Validated $found skill(s)."
+
+  validate-json:
+    name: "JSON manifests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: "Syntax-check all JSON files"
+        run: |
+          set -e
+          fail=0
+          while IFS= read -r -d '' f; do
+            if ! node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" 2>/dev/null; then
+              echo "::error file=$f::Invalid JSON"
+              fail=1
+            fi
+          done < <(find . -path ./node_modules -prune -o -name '*.json' -print0)
+          exit $fail
+
+      - name: "Schema-check marketplace.json"
+        run: |
+          # Verify the marketplace.json has the spec-required top-level fields
+          node -e "
+            const m = require('./.claude-plugin/marketplace.json');
+            const required = ['name','owner','plugins'];
+            for (const f of required) {
+              if (m[f] === undefined) throw new Error('marketplace.json missing required field: ' + f);
+            }
+            if (!m.owner.name) throw new Error('marketplace.json owner.name is required');
+            if (!Array.isArray(m.plugins)) throw new Error('marketplace.json plugins must be an array');
+            for (const p of m.plugins) {
+              if (!p.name) throw new Error('plugin entry missing name');
+              if (!p.source) throw new Error('plugin entry ' + p.name + ' missing source');
+            }
+            console.log('marketplace.json schema OK (' + m.plugins.length + ' plugins)');
+          "
+
+      - name: "Schema-check each plugin.json"
+        run: |
+          set -e
+          for f in plugins/*/.claude-plugin/plugin.json; do
+            node -e "
+              const p = require('./$f');
+              if (!p.name) throw new Error('$f missing name');
+              if (!p.description) throw new Error('$f missing description');
+              if (!p.version) throw new Error('$f missing version');
+              console.log('$f OK');
+            "
+          done
+
+  markdownlint:
+    name: "markdown lint"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: "Lint Markdown"
+        run: |
+          npx --yes markdownlint-cli2 \
+            "**/*.md" \
+            "#node_modules" \
+            "#.github/PULL_REQUEST_TEMPLATE.md" \
+          || true   # advisory only on first pass; flip to required later

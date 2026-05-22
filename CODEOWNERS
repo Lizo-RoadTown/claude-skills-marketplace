@@ -1,0 +1,25 @@
+# CODEOWNERS for claude-skills-marketplace
+#
+# Every PR routes a review request to the listed owners. The last matching
+# pattern wins, so more-specific rules at the bottom override broader rules
+# at the top.
+
+# Default — Liz reviews everything not otherwise claimed
+*                                       @Lizo-RoadTown
+
+# Marketplace catalog and per-plugin manifests are authoritative — Liz must approve
+/.claude-plugin/marketplace.json        @Lizo-RoadTown
+/plugins/*/.claude-plugin/plugin.json   @Lizo-RoadTown
+
+# Skill content — Liz approves changes to skills she authored
+/plugins/onboarding-psychologist/       @Lizo-RoadTown
+/plugins/ai-agents-architect/           @Lizo-RoadTown
+
+# OSS hygiene + governance
+/CODE_OF_CONDUCT.md                     @Lizo-RoadTown
+/SECURITY.md                            @Lizo-RoadTown
+/CHANGELOG.md                           @Lizo-RoadTown
+/LICENSE                                @Lizo-RoadTown
+
+# CI changes affect every contributor — Liz approves
+/.github/workflows/                     @Lizo-RoadTown

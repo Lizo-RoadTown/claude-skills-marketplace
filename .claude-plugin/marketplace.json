@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "lizo-skills",
+  "description": "Liz Osborn's Claude Code skills — onboarding psychology, agent architecture, and related design disciplines.",
+  "owner": {
+    "name": "Liz Osborn",
+    "email": "lizocontactinfo@gmail.com"
+  },
+  "metadata": {
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "onboarding-psychologist",
+      "source": "./plugins/onboarding-psychologist",
+      "description": "Designs first-time-user flows using the IDENTITY-TO-HABIT arc — grounded in BJ Fogg's Tiny Habits and James Clear's identity-based habits.",
+      "version": "0.1.0",
+      "author": { "name": "Liz Osborn" },
+      "license": "Apache-2.0",
+      "category": "design",
+      "tags": ["ux", "onboarding", "behavioral-design", "first-use", "retention"],
+      "repository": "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
+    },
+    {
+      "name": "ai-agents-architect",
+      "source": "./plugins/ai-agents-architect",
+      "description": "Decision framework for agent architecture — single vs multi-agent, ReAct vs Plan-and-Execute, autonomy spectrum, when to introduce an orchestrator.",
+      "version": "0.1.0",
+      "author": { "name": "Liz Osborn" },
+      "license": "Apache-2.0",
+      "category": "agents",
+      "tags": ["agents", "architecture", "orchestration", "multi-agent", "react", "plan-and-execute"],
+      "repository": "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
+    }
+  ]
+}
