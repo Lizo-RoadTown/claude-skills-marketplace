@@ -1,0 +1,22 @@
+// markdownlint config for claude-skills-marketplace.
+// CI uses markdownlint-cli2 with these rules.
+{
+  // MD024 - no duplicate headings. Keep-a-Changelog REQUIRES repeating
+  // ### Fixed / ### Changed / ### Added under each ## version header.
+  // siblings_only allows duplicates as long as they aren't siblings of
+  // each other (i.e. they're under different parent headings).
+  "MD024": { "siblings_only": true },
+
+  // MD013 - line length. Don't enforce — markdown prose wraps naturally
+  // and our content blocks (changelog entries, descriptions) often need
+  // longer lines for readability.
+  "MD013": false,
+
+  // MD033 - inline HTML. We use <span>, <div>, occasional <img>/<p align>
+  // in README and CHANGELOG for things markdown can't express.
+  "MD033": false,
+
+  // MD041 - first line in file must be H1. README starts with badges
+  // (HTML-as-images, no heading) before the H1. Standard pattern.
+  "MD041": false
+}
