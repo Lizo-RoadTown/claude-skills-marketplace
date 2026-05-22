@@ -1,7 +1,7 @@
 {
   "name": "onboarding-psychologist",
-  "description": "Designs first-time-user flows using the IDENTITY-TO-HABIT arc — grounded in BJ Fogg's Tiny Habits and James Clear's identity-based habits.",
-  "version": "0.1.0",
+  "description": "Designs first-time-user flows using the IDENTITY-TO-HABIT arc — grounded in BJ Fogg's Tiny Habits and Fogg Behavior Model, Nir Eyal's Hook Model, and James Clear's identity-based habits.",
+  "version": "0.1.1",
   "author": {
     "name": "Liz Osborn"
   },

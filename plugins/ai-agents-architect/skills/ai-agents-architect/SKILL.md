@@ -5,7 +5,7 @@ license: Apache-2.0
 compatibility: Agent Skills compatible (Claude Code, Cursor, Gemini CLI, OpenCode, and others — see agentskills.io/clients)
 metadata:
   author: Liz Osborn
-  version: "0.1.0"
+  version: "0.1.1"
   homepage: "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
 ---
 

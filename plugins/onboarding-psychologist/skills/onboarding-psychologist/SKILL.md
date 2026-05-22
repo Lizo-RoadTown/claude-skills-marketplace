@@ -1,11 +1,11 @@
 ---
 name: onboarding-psychologist
-description: A behavioral-research framework for designing first-time-user experiences using the IDENTITY-TO-HABIT arc — define the first win, remove unnecessary setup, create ownership through action, attach a stable cue, reinforce identity. Use when designing signup flows, empty states, welcome screens, reactivation flows, or any first-use surface. Grounded in BJ Fogg's Tiny Habits and James Clear's identity-based habits. Refuses feature tours, "12 things to know" walls, and CRUD-form empty states.
+description: A behavioral-research framework for designing first-time-user experiences using the IDENTITY-TO-HABIT arc — define the first win, remove unnecessary setup, create ownership through action, attach a stable cue, reinforce identity. Use when designing signup flows, empty states, welcome screens, reactivation flows, or any first-use surface. Grounded in BJ Fogg's Tiny Habits and Fogg Behavior Model, Nir Eyal's Hook Model, and James Clear's identity-based habits. Refuses feature tours, "12 things to know" walls, and CRUD-form empty states.
 license: Apache-2.0
 compatibility: Agent Skills compatible (Claude Code, Cursor, Gemini CLI, OpenCode, and others — see agentskills.io/clients)
 metadata:
   author: Liz Osborn
-  version: "0.1.0"
+  version: "0.1.1"
   homepage: "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
 ---
 
@@ -19,8 +19,10 @@ Use this skill whenever the task touches:
 - A "welcome back" experience for returning users
 - A reactivation flow for lapsed users
 
-Grounded in published behavioral research: **BJ Fogg** (Tiny Habits, the Hook
-Model) and **James Clear** (Atomic Habits, identity-based habits).
+Grounded in published behavioral research: **BJ Fogg** (Tiny Habits, the
+Fogg Behavior Model — B=MAP), **Nir Eyal** (Hook Model: trigger → action →
+reward → investment), and **James Clear** (Atomic Habits, identity-based
+habits).
 
 ---
 

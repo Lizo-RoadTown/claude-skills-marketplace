@@ -11,6 +11,17 @@ or any skill).
 
 ## [Unreleased]
 
+## [0.1.1] — 2026-05-21
+
+### Fixed
+
+- **`onboarding-psychologist` v0.1.1** — fixed misattribution in the body text. The Hook Model is Nir Eyal's framework (from *Hooked*, 2014), not BJ Fogg's. BJ Fogg authored Tiny Habits and the **Fogg Behavior Model (B=MAP)**. Description and reference list now correctly credit all three researchers (Fogg, Eyal, Clear). The References section was already correct — this fix aligns the body text and frontmatter description with the references.
+
+### Changed
+
+- **`ai-agents-architect` v0.1.1** — added `tree-of-thoughts` to plugin keywords and marketplace tags. The skill teaches the Tree-of-Thoughts pattern alongside ReAct and Plan-and-Execute; the tag omission was a discoverability gap. Description also updated to name the third pattern explicitly.
+- **`onboarding-psychologist` v0.1.1** — added `fogg-behavior-model`, `tiny-habits`, `hook-model`, and `identity-based-habits` to marketplace tags for the same discoverability reason.
+
 ## [0.1.0] — 2026-05-21
 
 ### Added
