@@ -5,7 +5,7 @@ license: Apache-2.0
 compatibility: Agent Skills compatible (Claude Code, Cursor, Gemini CLI, OpenCode, and others — see agentskills.io/clients)
 metadata:
   author: Liz Osborn
-  version: "0.1.2"
+  version: "0.1.3"
   homepage: "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
 ---
 
@@ -149,25 +149,29 @@ it falls into.
 
 ## Related skills
 
-These three are not part of this marketplace — they're external skills
-this one points to once you've made the architectural decisions it helps
-with. Use them in sequence: architecture → orchestration → memory →
-implementation.
+These are external skills this one points to once you've made the
+architectural decisions it helps with. Use them in sequence:
+architecture → planning → memory → parallel execution → implementation.
 
-- **Multi-agent coordination patterns.** Once you've decided you need
-  multiple agents, you need a coordination layer. Public options:
-  - [AWS Labs `cli-agent-orchestrator`](https://github.com/awslabs/cli-agent-orchestrator) — Python library for the Handoff / Assign / send_message primitives
-  - [muratcankoylan `multi-agent-patterns`](https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering) — Claude Code skill in the Context Engineering pack
-  - Project-starter docs: <https://github.com/Lizo-RoadTown/project-starter/blob/main/site/docs/variants/agent-orchestrator.html>
+- **Multi-step planning + execution.** Once architecture is decided,
+  break the work into atomic steps that survive context resets:
+  - `superpowers:writing-plans` — produce the plan as a typed file the agent can execute step-by-step
+  - `superpowers:executing-plans` — work through the plan with checkpoints
+  - Install: `/plugin marketplace add obra/superpowers` then `/plugin install writing-plans@superpowers` and `/plugin install executing-plans@superpowers`
 
-- **Memory system design.** For the persistence layer once architecture is decided. Public options:
-  - [sickn33 `agent-memory-systems`](https://github.com/sickn33/antigravity-awesome-skills) — Claude Code skill covering CoALA framework, vector stores, chunking, consolidation
-  - Project-starter docs: <https://github.com/Lizo-RoadTown/project-starter/blob/main/site/docs/variants/agent-memory-systems.html>
+- **Durable conversation memory.** For the persistence layer once
+  architecture is decided:
+  - `episodic-memory:remembering-conversations` — Anthropic-published; real durable memory for agents
+  - Install: `/plugin marketplace add anthropics/skills` then `/plugin install remembering-conversations@episodic-memory`
+
+- **Parallel-agent dispatch.** If your architecture decision lands on
+  multi-agent, this is the coordination primitive:
+  - `superpowers:dispatching-parallel-agents` — handoffs, supervisor/worker, peer-to-peer
+  - Install: `/plugin install dispatching-parallel-agents@superpowers`
 
 - **Anthropic SDK helper (`claude-api`).** Anthropic's official skill for
-  the implementation step after architecture is settled. Install via:
-  `/plugin marketplace add anthropics/skills` then
-  `/plugin install claude-api@anthropic-agent-skills`
+  the implementation step after architecture is settled:
+  - Install: `/plugin marketplace add anthropics/skills` then `/plugin install claude-api@anthropic-agent-skills`
 
 ---
 
