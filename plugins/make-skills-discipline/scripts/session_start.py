@@ -25,13 +25,28 @@ import json
 import os
 import subprocess
 import sys
+import time
 from pathlib import Path
+
+# Shared observability helper (v0.1.2+).
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    from _observability import log_event, now_ms
+except Exception:  # noqa: BLE001
+    def log_event(*_args, **_kwargs):
+        pass
+
+    def now_ms() -> int:
+        return int(time.time() * 1000)
 
 
 def main() -> int:
+    start = now_ms()
+    log_event("SessionStart", "start")
     try:
         data = json.load(sys.stdin)
     except json.JSONDecodeError:
+        log_event("SessionStart", "end", exit_code=0, elapsed_ms=now_ms() - start, action="noop", note="malformed_input")
         return 0
 
     cwd = Path(data.get("cwd") or os.getcwd())
@@ -45,12 +60,14 @@ def main() -> int:
         or (cwd / "ARCHITECTURE.md").exists() and (cwd / "scripts" / "architecture_snapshot.py").exists()
     )
     if not in_scope:
+        log_event("SessionStart", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=False, action="noop", note="out_of_scope")
         return 0
 
     snapshot_script = cwd / "scripts" / "architecture_snapshot.py"
     diff_script = cwd / "scripts" / "architecture_diff.py"
     if not snapshot_script.exists():
         # No scripts installed yet in this repo — silently skip.
+        log_event("SessionStart", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=True, action="noop", note="snapshot_script_absent")
         return 0
 
     # Resolve python — prefer system python, fall back to specific paths
@@ -73,6 +90,7 @@ def main() -> int:
             timeout=20,
         )
     except (subprocess.SubprocessError, OSError):
+        log_event("SessionStart", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=True, action="noop", note="snapshot_script_error")
         return 0
 
     # Run diff (only meaningful if we have at least 1 prior, but the diff
@@ -91,9 +109,11 @@ def main() -> int:
 
     # Find what was just written.
     if not snapshot_dir.exists():
+        log_event("SessionStart", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=True, action="noop", note="snapshot_dir_missing_post_run")
         return 0
     snapshots_after = sorted(snapshot_dir.glob("*-snapshot.json"))
     if not snapshots_after:
+        log_event("SessionStart", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=True, action="noop", note="no_snapshots_post_run")
         return 0
     new_snapshot = snapshots_after[-1]
     new_diff_md = new_snapshot.with_name(new_snapshot.stem.replace("-snapshot", "-diff") + ".md")
@@ -128,6 +148,13 @@ def main() -> int:
         }
     }
     print(json.dumps(payload))
+    log_event(
+        "SessionStart", "end",
+        exit_code=0, elapsed_ms=now_ms() - start,
+        scope_in=True,
+        action="snapshot_emitted",
+        note=f"first_run={first_run};snapshot={rel_snapshot.name}",
+    )
     return 0
 
 
