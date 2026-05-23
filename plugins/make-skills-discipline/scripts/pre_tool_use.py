@@ -25,7 +25,19 @@ import json
 import os
 import re
 import sys
+import time
 from pathlib import Path
+
+# Shared observability helper (v0.1.2+).
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    from _observability import log_event, now_ms
+except Exception:  # noqa: BLE001
+    def log_event(*_args, **_kwargs):
+        pass
+
+    def now_ms() -> int:
+        return int(time.time() * 1000)
 
 CITATION_REGEX = re.compile(
     r"[a-zA-Z_/\\.\-]+\.(py|ts|tsx|jsx|js|md|json|yaml|yml|toml|sh|ps1|sql):\d+"
@@ -46,13 +58,15 @@ DUAL_MODE_REMINDER = (
 )
 
 DUAL_MODE_TRIGGERS = (
-    "memory",
-    "tenant",
-    "RLS",
-    "current_setting",
+    # Tightened in v0.1.2: removed "memory" and "tenant" (caused frequent
+    # false positives on session memory writes and any docs mentioning tenants).
+    # Keep only patterns specific to actual runtime tenant-scoping code.
     "tenant_id",
+    "RLS",
+    "current_setting('app.tenant",
     "AUTH_SECRET",
     "JWTTenantResolver",
+    "set_config('app.tenant",
 )
 
 

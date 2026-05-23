@@ -1,6 +1,6 @@
 ---
 name: make-skills-discipline
-description: Use BEFORE every response when working in Make_Skills or any Lizo-RoadTown/project-starter-scaffolded repo. Loads the project-specific behavioral discipline that prevents confident-wrong-claim and discipline-drift failure modes. Required invocation before any assertion about the codebase, any infrastructure description, or any substantive task. This is the wrapper that makes Make_Skills's discipline architecture apply to the developer's agent (not just to the running app's tenant agents).
+description: Make_Skills + project-starter behavioral wrapper. Auto-invoked BEFORE every response: PROBE files, cite file:line, save friction as memory.
 license: Apache-2.0
 metadata:
   author: Liz Osborn (with agent-assisted authoring)
