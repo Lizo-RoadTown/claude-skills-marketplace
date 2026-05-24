@@ -1,6 +1,6 @@
 ---
 name: make-skills-discipline
-description: Make_Skills + project-starter behavioral wrapper. Auto-invoked BEFORE every response: PROBE files, cite file:line, save friction as memory.
+description: "Make_Skills + project-starter behavioral wrapper. Auto-invoked BEFORE every response: PROBE files, cite file:line, save friction as memory."
 license: Apache-2.0
 metadata:
   author: Liz Osborn (with agent-assisted authoring)
