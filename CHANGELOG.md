@@ -11,6 +11,13 @@ or any skill).
 
 ## [Unreleased]
 
+### Added
+
+- **`make-skills-discipline` v0.1.3** — two false-positive fixes in the `PreToolUse` hook + first plugin unit tests.
+  - **Citation regex broadened.** `pre_tool_use.py:CITATION_PATTERNS` now accepts three forms: the original `file.ext:line`, bare `path/file.ext` paths, and `https?://` URLs. Previously, citing external docs (Context7, GitHub, vendor URLs) didn't satisfy the citation check and fired a spurious "no citation" reminder.
+  - **Dual-mode triggers gated by target path.** `touches_dual_mode()` now early-exits when the edit target is a docs/markdown/convention file (`.md`/`.rst`/`.txt`/`.mdx` extensions, or paths under `docs/`, top-level `README`/`CHANGELOG`/`CONTRIBUTING`/`ARCHITECTURE`/`AGENTS.md`/`CLAUDE.md`, or `.github/`). Previously, any doc that mentioned a trigger keyword (e.g., `AUTH_SECRET` in a planning doc) fired the boundary-change reminder. Same class of false-positive as the v0.1.2 `memory`/`tenant` fix.
+  - **First plugin tests.** `plugins/make-skills-discipline/tests/test_pre_tool_use.py` — 14 unittest cases covering both fixes (citation forms accepted/rejected; docs gated; runtime fires preserved). New CI job `pytest` in `.github/workflows/validate.yml` runs `python -m unittest discover` over every `plugins/*/tests/` dir.
+
 ## [0.1.3] — 2026-05-22
 
 ### Changed

@@ -39,11 +39,37 @@ except Exception:  # noqa: BLE001
     def now_ms() -> int:
         return int(time.time() * 1000)
 
-CITATION_REGEX = re.compile(
-    r"[a-zA-Z_/\\.\-]+\.(py|ts|tsx|jsx|js|md|json|yaml|yml|toml|sh|ps1|sql):\d+"
+# v0.1.3: three citation forms accepted.
+# 1. file.ext:line — the original strict form.
+# 2. bare file.ext path with at least one slash — citing a file as a whole
+#    (e.g., `render.yaml` config, a whole script).
+# 3. https://... URL — citing external docs (Context7, GitHub, vendor docs).
+_FILE_EXTS = r"(?:py|ts|tsx|jsx|js|md|json|yaml|yml|toml|sh|ps1|sql)"
+CITATION_PATTERNS = (
+    re.compile(rf"[a-zA-Z_/\\.\-]+\.{_FILE_EXTS}:\d+"),
+    re.compile(rf"[a-zA-Z_][a-zA-Z0-9_./\\\-]*[/\\][a-zA-Z0-9_.\-]+\.{_FILE_EXTS}\b"),
+    re.compile(r"https?://[^\s)\]]+"),
 )
 
 RUNTIME_PATHS = ("platform/", "platform\\", "web/", "web\\")
+
+# v0.1.3: dual-mode trigger should fire only on actual runtime-code edits.
+# Docs and config files that merely mention the trigger keywords (e.g., a
+# planning doc listing `AUTH_SECRET` as a discussion item) are not boundary
+# changes. Skip them.
+DUAL_MODE_SKIP_EXTS = (".md", ".rst", ".txt", ".mdx")
+DUAL_MODE_SKIP_PREFIXES = (
+    "docs/",
+    "docs\\",
+    "README",
+    "CHANGELOG",
+    "CONTRIBUTING",
+    "ARCHITECTURE",
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".github/",
+    ".github\\",
+)
 
 CITATION_REMINDER = (
     "PreToolUse check: about to edit runtime code without recent file:line citation. "
@@ -83,10 +109,38 @@ def has_recent_citation(transcript_path: str) -> bool:
         return True
     # Look at the tail — last ~5k chars covers a few turns.
     tail = text[-5000:]
-    return bool(CITATION_REGEX.search(tail))
+    return any(pat.search(tail) for pat in CITATION_PATTERNS)
+
+
+def _target_is_docs(target: str) -> bool:
+    """True when the edit target is a docs/markdown file or convention doc.
+
+    Dual-mode triggers should not fire on these — they mention boundary
+    keywords as discussion items, not as runtime boundary changes.
+    """
+    if not target:
+        return False
+    lowered = target.lower()
+    if lowered.endswith(DUAL_MODE_SKIP_EXTS):
+        return True
+    normalized = target.replace("\\", "/")
+    # Strip leading paths so "anything/docs/x" and "docs/x" both match.
+    for prefix in DUAL_MODE_SKIP_PREFIXES:
+        prefix_norm = prefix.replace("\\", "/")
+        if normalized.startswith(prefix_norm) or f"/{prefix_norm}" in normalized:
+            return True
+    return False
 
 
 def touches_dual_mode(tool_input: dict) -> bool:
+    target = (
+        tool_input.get("file_path")
+        or tool_input.get("path")
+        or tool_input.get("filePath")
+        or ""
+    )
+    if _target_is_docs(target):
+        return False
     blob = json.dumps(tool_input, default=str)
     return any(trigger in blob for trigger in DUAL_MODE_TRIGGERS)
 

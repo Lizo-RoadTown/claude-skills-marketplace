@@ -1,7 +1,7 @@
 {
   "name": "make-skills-discipline",
   "description": "Discipline wrapper for Claude Code sessions working in Make_Skills or any project-starter-scaffolded repo. Auto-injects PROBE-first behavior, file:line citation enforcement, dev-tooling-vs-runtime distinction, and friction-as-memory writing. The harness's skill-matching surfaces it on every relevant message; hook scripts inject reminders on every prompt and audit tool args before writes.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": {
     "name": "Liz Osborn",
     "url": "https://github.com/Lizo-RoadTown"

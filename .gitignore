@@ -14,3 +14,7 @@ Thumbs.db
 
 # Node (if any tooling ever lands here)
 node_modules/
+
+# Python bytecode (plugin tests)
+__pycache__/
+*.pyc
