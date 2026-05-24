@@ -20,7 +20,19 @@ in Lizo-RoadTown/Make_Skills.
 import json
 import re
 import sys
+import time
 from pathlib import Path
+
+# Shared observability helper (v0.1.2+).
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    from _observability import log_event, now_ms
+except Exception:  # noqa: BLE001
+    def log_event(*_args, **_kwargs):
+        pass
+
+    def now_ms() -> int:
+        return int(time.time() * 1000)
 
 # Heuristic: phrases that smell like factual claims about the stack/codebase.
 SUSPICIOUS_CLAIM = re.compile(
@@ -42,9 +54,12 @@ REMINDER = (
 
 
 def main() -> int:
+    start = now_ms()
+    log_event("Stop", "start")
     try:
         data = json.load(sys.stdin)
     except json.JSONDecodeError:
+        log_event("Stop", "end", exit_code=0, elapsed_ms=now_ms() - start, action="noop", note="malformed_input")
         return 0
 
     cwd = data.get("cwd") or ""
@@ -52,14 +67,17 @@ def main() -> int:
 
     in_scope = "Make_Skills" in cwd or "project-starter" in cwd.lower() or "_common" in cwd
     if not in_scope:
+        log_event("Stop", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=False, action="noop", note="out_of_scope")
         return 0
 
     if not transcript_path:
+        log_event("Stop", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=True, action="noop", note="no_transcript_path")
         return 0
 
     try:
         raw = Path(transcript_path).read_text(encoding="utf-8", errors="ignore")
     except OSError:
+        log_event("Stop", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=True, action="noop", note="transcript_unreadable")
         return 0
 
     # Transcripts are JSONL. Find the last assistant turn.
@@ -89,6 +107,7 @@ def main() -> int:
             break
 
     if not last_assistant_text:
+        log_event("Stop", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=True, action="noop", note="no_assistant_turn_found")
         return 0
 
     claims = SUSPICIOUS_CLAIM.findall(last_assistant_text)
@@ -105,6 +124,9 @@ def main() -> int:
             }
         }
         print(json.dumps(payload))
+        log_event("Stop", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=True, action="reminder_injected", note=f"claims={len(claims)};cited=False")
+    else:
+        log_event("Stop", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=True, action="noop", note=f"claims={len(claims)};cited={cited}")
 
     return 0
 

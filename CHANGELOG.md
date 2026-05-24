@@ -11,6 +11,17 @@ or any skill).
 
 ## [Unreleased]
 
+## [0.1.3] — 2026-05-22
+
+### Changed
+
+- **`ai-agents-architect` v0.1.3** — replaced "Related skills" cross-references with verified real-installable skills from the public stack:
+  - `superpowers:writing-plans` + `superpowers:executing-plans` for multi-step planning + execution (replaces previous AWS Labs reference, which was a Python library not a skill)
+  - `episodic-memory:remembering-conversations` for durable memory (replaces sickn33's manual-clone skill, which had no marketplace entry)
+  - `superpowers:dispatching-parallel-agents` for multi-agent coordination (replaces muratcankoylan's Context Engineering plugin, which was thinner and had no review trail)
+  - `claude-api` kept as-is — Anthropic's official SDK skill
+  - Public-skill availability verified by the Make_Skills agent against the live registry before publish.
+
 ## [0.1.2] — 2026-05-21
 
 ### Fixed

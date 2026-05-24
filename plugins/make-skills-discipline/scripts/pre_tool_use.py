@@ -25,7 +25,19 @@ import json
 import os
 import re
 import sys
+import time
 from pathlib import Path
+
+# Shared observability helper (v0.1.2+).
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    from _observability import log_event, now_ms
+except Exception:  # noqa: BLE001
+    def log_event(*_args, **_kwargs):
+        pass
+
+    def now_ms() -> int:
+        return int(time.time() * 1000)
 
 CITATION_REGEX = re.compile(
     r"[a-zA-Z_/\\.\-]+\.(py|ts|tsx|jsx|js|md|json|yaml|yml|toml|sh|ps1|sql):\d+"
@@ -46,13 +58,15 @@ DUAL_MODE_REMINDER = (
 )
 
 DUAL_MODE_TRIGGERS = (
-    "memory",
-    "tenant",
-    "RLS",
-    "current_setting",
+    # Tightened in v0.1.2: removed "memory" and "tenant" (caused frequent
+    # false positives on session memory writes and any docs mentioning tenants).
+    # Keep only patterns specific to actual runtime tenant-scoping code.
     "tenant_id",
+    "RLS",
+    "current_setting('app.tenant",
     "AUTH_SECRET",
     "JWTTenantResolver",
+    "set_config('app.tenant",
 )
 
 
@@ -99,9 +113,12 @@ def emit_block(reason: str) -> None:
 
 
 def main() -> int:
+    start = now_ms()
+    log_event("PreToolUse", "start")
     try:
         data = json.load(sys.stdin)
     except json.JSONDecodeError:
+        log_event("PreToolUse", "end", exit_code=0, elapsed_ms=now_ms() - start, action="noop", note="malformed_input")
         return 0
 
     tool_name = data.get("tool_name") or ""
@@ -112,9 +129,11 @@ def main() -> int:
     # Only police Make_Skills and project-starter-scaffolded repos.
     in_scope = "Make_Skills" in cwd or "project-starter" in cwd.lower() or "_common" in cwd
     if not in_scope:
+        log_event("PreToolUse", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=False, action="noop", note=f"out_of_scope;tool={tool_name}")
         return 0
 
     if tool_name not in ("Edit", "Write", "MultiEdit"):
+        log_event("PreToolUse", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=True, action="noop", note=f"tool_not_matched;tool={tool_name}")
         return 0
 
     target = (
@@ -133,16 +152,20 @@ def main() -> int:
                 f"Editing runtime file {target} without a recent file:line citation. "
                 "Run Grep/Read to ground the change, cite it, then retry."
             )
+            log_event("PreToolUse", "end", exit_code=2, elapsed_ms=now_ms() - start, scope_in=True, action="block", note=f"strict_mode;runtime_edit_no_citation;target={target}")
             return 2
         emit_reminder(CITATION_REMINDER)
+        log_event("PreToolUse", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=True, action="reminder_injected", note=f"citation_reminder;target={target}")
         return 0
 
     # Check 2: dual-mode boundary touch
     if touches_dual_mode(tool_input):
         emit_reminder(DUAL_MODE_REMINDER)
+        log_event("PreToolUse", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=True, action="reminder_injected", note=f"dual_mode_trigger;target={target}")
         return 0
 
     # No issue.
+    log_event("PreToolUse", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=True, action="noop", note=f"clean;target={target}")
     return 0
 
 
