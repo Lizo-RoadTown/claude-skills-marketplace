@@ -11,6 +11,10 @@ or any skill).
 
 ## [Unreleased]
 
+### Fixed
+
+- **`make-skills-discipline` v0.1.4** — `_observability` import silent-fail under the Node launcher. v0.1.2/v0.1.3 hook scripts used `sys.path.insert + from _observability import ...` which silently fell back to no-op stubs when invoked via `run-python.mjs` (the Node launcher that `hooks.json` points at). Result: `hooks.jsonl` was never written, PR #38's Loki dashboard panels stayed empty, the discipline plugin's observability story was non-functional in practice despite being correct in principle. The v0.1.4 fix replaces the import with `importlib.util.spec_from_file_location` using an absolute path computed from `__file__` — bypasses `sys.path` entirely. If the import still fails (e.g., missing file), the error is now logged to `~/.claude/logs/hook-import-errors.log` instead of silently swallowed. Applied to all 4 hook scripts (`pre_tool_use.py`, `user_prompt_submit.py`, `stop_audit.py`, `session_start.py`). New subprocess regression test (`test_subprocess_writes_log_when_in_scope`) mimics the Node launcher's invocation pattern — catches future regressions of this class.
+
 ### Added
 
 - **`make-skills-discipline` v0.1.3** — two false-positive fixes in the `PreToolUse` hook + first plugin unit tests.

@@ -41,10 +41,47 @@ from pathlib import Path
 
 # Make the shared observability helper importable when this script runs
 # under the Node launcher (which sets cwd to wherever Claude Code is).
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-try:
-    from _observability import log_event, now_ms
-except Exception:  # noqa: BLE001
+# v0.1.4: absolute-path importlib. See pre_tool_use.py header comment for
+# why sys.path.insert + `from _observability import` failed silently under
+# the Node launcher.
+import importlib.util as _importlib_util
+
+_obs_path = Path(__file__).resolve().parent / "_observability.py"
+_obs_spec = _importlib_util.spec_from_file_location("_observability", _obs_path)
+if _obs_spec is not None and _obs_spec.loader is not None:
+    _obs_mod = _importlib_util.module_from_spec(_obs_spec)
+    try:
+        _obs_spec.loader.exec_module(_obs_mod)
+        log_event = _obs_mod.log_event
+        now_ms = _obs_mod.now_ms
+    except Exception as _obs_err:  # noqa: BLE001
+        _fallback_log = Path.home() / ".claude" / "logs" / "hook-import-errors.log"
+        try:
+            _fallback_log.parent.mkdir(parents=True, exist_ok=True)
+            with _fallback_log.open("a", encoding="utf-8") as _flog:
+                _flog.write(
+                    f"{Path(__file__).name}: _observability exec_module failed: {_obs_err!r}\n"
+                )
+        except Exception:  # noqa: BLE001
+            pass
+
+        def log_event(*_args, **_kwargs):  # type: ignore[misc]
+            pass
+
+        def now_ms() -> int:
+            return int(time.time() * 1000)
+else:
+    _fallback_log = Path.home() / ".claude" / "logs" / "hook-import-errors.log"
+    try:
+        _fallback_log.parent.mkdir(parents=True, exist_ok=True)
+        with _fallback_log.open("a", encoding="utf-8") as _flog:
+            _flog.write(
+                f"{Path(__file__).name}: _observability spec_from_file_location "
+                f"returned None for path={_obs_path}\n"
+            )
+    except Exception:  # noqa: BLE001
+        pass
+
     def log_event(*_args, **_kwargs):  # type: ignore[misc]
         pass
 
