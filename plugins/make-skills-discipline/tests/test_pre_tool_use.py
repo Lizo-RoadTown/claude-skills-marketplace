@@ -166,5 +166,90 @@ class TestDualModeGating(unittest.TestCase):
         )
 
 
+class TestSubprocessInvocation(unittest.TestCase):
+    """v0.1.4 regression test: mimics the Node launcher invocation pattern.
+
+    Background: in v0.1.2/v0.1.3, the hook scripts used
+    `sys.path.insert + from _observability import ...` which silently fell
+    back to no-op stubs when invoked via run-python.mjs (the Node launcher
+    that hooks.json points at). Result: hooks.jsonl was never written.
+
+    The v0.1.4 fix uses `importlib.util.spec_from_file_location` with an
+    absolute path. This test invokes pre_tool_use.py as a subprocess and
+    confirms the log file gets written — catches regressions where future
+    refactors break the import in the launcher-subprocess context.
+    """
+
+    def test_subprocess_writes_log_when_in_scope(self):
+        import json
+        import os
+        import subprocess
+        import tempfile
+
+        script_dir = Path(__file__).resolve().parent.parent / "scripts"
+        script_path = script_dir / "pre_tool_use.py"
+        self.assertTrue(script_path.exists(), f"missing {script_path}")
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            project_dir = tmp / "Make_Skills_test"
+            project_dir.mkdir()
+            log_dir = project_dir / ".claude" / "logs"
+
+            # Fake hook payload — a Write to a docs file, in scope.
+            fake_input = {
+                "tool_name": "Write",
+                "tool_input": {
+                    "file_path": str(project_dir / "docs" / "test.md"),
+                    "content": "innocuous content, no triggers",
+                },
+                "transcript_path": "",
+                "cwd": str(project_dir),
+            }
+
+            env = os.environ.copy()
+            env["CLAUDE_PROJECT_DIR"] = str(project_dir)
+            # Force the log to land in our temp dir, not the user's real
+            # ~/.claude/logs/, so we can assert against it cleanly.
+
+            result = subprocess.run(
+                ["python", str(script_path)],
+                input=json.dumps(fake_input),
+                capture_output=True,
+                text=True,
+                env=env,
+                timeout=10,
+            )
+
+            # Hook must exit 0 (never crash the harness).
+            self.assertEqual(
+                result.returncode, 0,
+                f"hook exited {result.returncode}; stderr: {result.stderr}",
+            )
+
+            # The whole point of v0.1.4: the log file should exist with at
+            # least the start + end entries for this invocation.
+            log_file = log_dir / "hooks.jsonl"
+            self.assertTrue(
+                log_file.exists(),
+                f"hooks.jsonl was NOT written. "
+                f"This is the v0.1.2/v0.1.3 silent-import regression. "
+                f"Check that pre_tool_use.py's _observability import succeeded; "
+                f"if not, ~/.claude/logs/hook-import-errors.log should explain why. "
+                f"stderr: {result.stderr}",
+            )
+
+            # Should have at least one valid JSON line per hook phase.
+            lines = log_file.read_text(encoding="utf-8").splitlines()
+            self.assertGreaterEqual(
+                len(lines), 1,
+                f"hooks.jsonl is empty. Lines: {lines}",
+            )
+            for line in lines:
+                entry = json.loads(line)  # raises if not valid JSON
+                self.assertIn("hook", entry)
+                self.assertIn("phase", entry)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -28,11 +28,60 @@ import sys
 import time
 from pathlib import Path
 
-# Shared observability helper (v0.1.2+).
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-try:
-    from _observability import log_event, now_ms
-except Exception:  # noqa: BLE001
+# Shared observability helper (v0.1.4: absolute-path importlib).
+#
+# v0.1.2/v0.1.3 used `sys.path.insert + from _observability import ...`,
+# which silently fell back to no-op stubs when invoked via the Node
+# launcher (run-python.mjs). __file__ resolves correctly under direct
+# python invocation but Path(__file__).resolve().parent didn't surface
+# the script's own directory on sys.path under the launcher's subprocess
+# pattern. Result: hooks.jsonl was never written; PR #38's Loki
+# dashboard panels stayed empty.
+#
+# v0.1.4 uses importlib.util.spec_from_file_location with an absolute
+# path computed from __file__ — bypasses sys.path entirely. If the
+# import still fails (e.g., _observability.py is missing from the
+# install), the failure is logged to a fallback file
+# (~/.claude/logs/hook-import-errors.log) so the error is observable
+# instead of silent.
+import importlib.util as _importlib_util
+
+_obs_path = Path(__file__).resolve().parent / "_observability.py"
+_obs_spec = _importlib_util.spec_from_file_location("_observability", _obs_path)
+if _obs_spec is not None and _obs_spec.loader is not None:
+    _obs_mod = _importlib_util.module_from_spec(_obs_spec)
+    try:
+        _obs_spec.loader.exec_module(_obs_mod)
+        log_event = _obs_mod.log_event
+        now_ms = _obs_mod.now_ms
+    except Exception as _obs_err:  # noqa: BLE001
+        _fallback_log = Path.home() / ".claude" / "logs" / "hook-import-errors.log"
+        try:
+            _fallback_log.parent.mkdir(parents=True, exist_ok=True)
+            with _fallback_log.open("a", encoding="utf-8") as _flog:
+                _flog.write(
+                    f"{Path(__file__).name}: _observability exec_module failed: {_obs_err!r}\n"
+                )
+        except Exception:  # noqa: BLE001
+            pass
+
+        def log_event(*_args, **_kwargs):
+            pass
+
+        def now_ms() -> int:
+            return int(time.time() * 1000)
+else:
+    _fallback_log = Path.home() / ".claude" / "logs" / "hook-import-errors.log"
+    try:
+        _fallback_log.parent.mkdir(parents=True, exist_ok=True)
+        with _fallback_log.open("a", encoding="utf-8") as _flog:
+            _flog.write(
+                f"{Path(__file__).name}: _observability spec_from_file_location "
+                f"returned None for path={_obs_path}\n"
+            )
+    except Exception:  # noqa: BLE001
+        pass
+
     def log_event(*_args, **_kwargs):
         pass
 
