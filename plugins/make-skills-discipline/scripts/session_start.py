@@ -86,10 +86,12 @@ def main() -> int:
     cwd = Path(data.get("cwd") or os.getcwd())
     cwd_lower = str(cwd).lower()
 
-    # Scope-guard. Only run in Make_Skills or project-starter-scaffolded repos.
+    # Scope-guard. Only run in Make_Skills, the-loom, or project-starter-scaffolded repos.
+    # v0.1.5: added "the-loom".
     in_scope = (
         "make_skills" in cwd_lower
         or "make-skills" in cwd_lower
+        or "the-loom" in cwd_lower
         or "project-starter" in cwd_lower
         or (cwd / "ARCHITECTURE.md").exists() and (cwd / "scripts" / "architecture_snapshot.py").exists()
     )

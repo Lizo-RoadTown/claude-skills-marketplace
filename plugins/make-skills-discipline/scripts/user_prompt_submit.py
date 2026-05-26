@@ -206,9 +206,12 @@ def main() -> int:
     prompt = data.get("prompt") or ""
     cwd = data.get("cwd") or ""
 
-    is_make_skills = "Make_Skills" in cwd or "make-skills" in cwd.lower()
-    is_starter = "project-starter" in cwd.lower() or "_common" in cwd
-    in_scope = bool(is_make_skills or is_starter)
+    # v0.1.5: added "the-loom" + normalized case-insensitive.
+    cwd_l = cwd.lower()
+    is_make_skills = "make_skills" in cwd_l or "make-skills" in cwd_l
+    is_loom = "the-loom" in cwd_l
+    is_starter = "project-starter" in cwd_l or "_common" in cwd
+    in_scope = bool(is_make_skills or is_loom or is_starter)
 
     if not in_scope:
         log_event(

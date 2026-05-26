@@ -229,8 +229,16 @@ def main() -> int:
     transcript_path = data.get("transcript_path") or ""
     cwd = data.get("cwd") or ""
 
-    # Only police Make_Skills and project-starter-scaffolded repos.
-    in_scope = "Make_Skills" in cwd or "project-starter" in cwd.lower() or "_common" in cwd
+    # Only police Make_Skills, the-loom, and project-starter-scaffolded repos.
+    # v0.1.5: added "the-loom" + normalized to case-insensitive comparison.
+    cwd_l = cwd.lower()
+    in_scope = (
+        "make_skills" in cwd_l
+        or "make-skills" in cwd_l
+        or "the-loom" in cwd_l
+        or "project-starter" in cwd_l
+        or "_common" in cwd
+    )
     if not in_scope:
         log_event("PreToolUse", "end", exit_code=0, elapsed_ms=now_ms() - start, scope_in=False, action="noop", note=f"out_of_scope;tool={tool_name}")
         return 0

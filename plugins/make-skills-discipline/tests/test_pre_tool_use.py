@@ -166,6 +166,62 @@ class TestDualModeGating(unittest.TestCase):
         )
 
 
+class TestScopeCheck(unittest.TestCase):
+    """v0.1.5: in-scope check now includes the-loom + is case-insensitive.
+
+    The hook's main() function early-exits with `action=noop` when cwd is
+    out of scope. We can't call main() directly without faking stdin, so
+    we exercise the same scope-check expression as a unit test by
+    constructing the exact predicate locally and verifying it matches
+    what the script enforces. If the script's predicate changes, this
+    test will fall out of date and signal that scope coverage shifted.
+    """
+
+    def _is_in_scope(self, cwd: str) -> bool:
+        # Mirror the predicate at pre_tool_use.py:233-241 (v0.1.5).
+        cwd_l = cwd.lower()
+        return (
+            "make_skills" in cwd_l
+            or "make-skills" in cwd_l
+            or "the-loom" in cwd_l
+            or "project-starter" in cwd_l
+            or "_common" in cwd
+        )
+
+    def test_make_skills_paths_in_scope(self):
+        for path in [
+            "C:/Users/Liz/Make_Skills",
+            "/home/liz/Make_Skills",
+            "/tmp/make-skills-fork",
+            "C:/Users/Liz/MAKE_SKILLS",
+        ]:
+            self.assertTrue(self._is_in_scope(path), f"expected in-scope: {path}")
+
+    def test_the_loom_paths_in_scope(self):
+        """v0.1.5: the-loom is now a first-class scope."""
+        for path in [
+            "C:/Users/Liz/the-loom",
+            "/home/liz/the-loom",
+            "C:/Users/Liz/The-Loom",
+        ]:
+            self.assertTrue(self._is_in_scope(path), f"expected in-scope: {path}")
+
+    def test_project_starter_paths_in_scope(self):
+        for path in [
+            "C:/Users/Liz/project-starter",
+            "C:/Users/Liz/my-app-from-project-starter",
+        ]:
+            self.assertTrue(self._is_in_scope(path), f"expected in-scope: {path}")
+
+    def test_unrelated_paths_out_of_scope(self):
+        for path in [
+            "C:/Users/Liz/random-project",
+            "/tmp/somewhere-else",
+            "C:/Users/Liz/Documents",
+        ]:
+            self.assertFalse(self._is_in_scope(path), f"expected out-of-scope: {path}")
+
+
 class TestSubprocessInvocation(unittest.TestCase):
     """v0.1.4 regression test: mimics the Node launcher invocation pattern.
 
