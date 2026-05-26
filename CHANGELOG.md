@@ -11,6 +11,10 @@ or any skill).
 
 ## [Unreleased]
 
+### Changed
+
+- **`make-skills-discipline` v0.1.5** — broadened in-scope check to include `the-loom`. All four hook scripts (`pre_tool_use.py`, `stop_audit.py`, `user_prompt_submit.py`, `session_start.py`) now fire in three project trees: `Make_Skills`, `the-loom`, and `project-starter`-scaffolded repos. Normalized to case-insensitive comparison for the path-substring matches so future repo naming variations don't silently disable hooks. New test case (`test_scope_includes_the_loom`) verifies the-loom paths fire the hook.
+
 ### Fixed
 
 - **`make-skills-discipline` v0.1.4** — `_observability` import silent-fail under the Node launcher. v0.1.2/v0.1.3 hook scripts used `sys.path.insert + from _observability import ...` which silently fell back to no-op stubs when invoked via `run-python.mjs` (the Node launcher that `hooks.json` points at). Result: `hooks.jsonl` was never written, PR #38's Loki dashboard panels stayed empty, the discipline plugin's observability story was non-functional in practice despite being correct in principle. The v0.1.4 fix replaces the import with `importlib.util.spec_from_file_location` using an absolute path computed from `__file__` — bypasses `sys.path` entirely. If the import still fails (e.g., missing file), the error is now logged to `~/.claude/logs/hook-import-errors.log` instead of silently swallowed. Applied to all 4 hook scripts (`pre_tool_use.py`, `user_prompt_submit.py`, `stop_audit.py`, `session_start.py`). New subprocess regression test (`test_subprocess_writes_log_when_in_scope`) mimics the Node launcher's invocation pattern — catches future regressions of this class.
