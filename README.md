@@ -14,11 +14,11 @@ agent — **Claude Code, Cursor, Gemini CLI, OpenCode, Junie, Goose, Amp**, and
 [plugin marketplace](https://docs.claude.com/en/docs/claude-code/plugin-marketplaces)
 manifest so the skills install with one command in Claude Code.
 
-Three plugins ship here today: two pure skills (`onboarding-psychologist`, `ai-agents-architect`) authored as design disciplines, and one discipline plugin (`make-skills-discipline`) that auto-injects behavioral rules + hooks into every Claude Code session in Liz's repos. The two pure skills are referenced by [project-starter](https://github.com/Lizo-RoadTown/project-starter)'s variant templates; the discipline plugin is consumed by [Make_Skills](https://github.com/Lizo-RoadTown/Make_Skills) and [the-loom](https://github.com/Lizo-RoadTown/the-loom).
+Both skills are referenced by [project-starter](https://github.com/Lizo-RoadTown/project-starter)'s variant templates. Until now, they had no public install path — this repo fixes that.
 
-## Plugins in this marketplace
+## Skills in this marketplace
 
-### `onboarding-psychologist` — pure skill
+### `onboarding-psychologist`
 
 A behavioral-research framework for designing first-time-user experiences using the **IDENTITY-TO-HABIT arc**:
 
@@ -30,7 +30,7 @@ A behavioral-research framework for designing first-time-user experiences using 
 
 Grounded in BJ Fogg's Tiny Habits and James Clear's identity-based habits. Activates on signup flows, empty states, welcome screens, and reactivation work. Refuses to produce feature tours, "12 things to know" walls, and CRUD-form empty states.
 
-### `ai-agents-architect` — pure skill
+### `ai-agents-architect`
 
 A decision framework for autonomous-agent architecture:
 
@@ -40,21 +40,6 @@ A decision framework for autonomous-agent architecture:
 - **When to introduce an orchestrator?**
 
 Activates on agent-design and orchestration questions. Refuses tool overload, infinite tool loops without a cap, and unverified multi-agent splits.
-
-### `make-skills-discipline` — discipline plugin (Claude Code only)
-
-Not a pure skill — a Claude Code plugin that **auto-injects behavioral rules + hook scripts** into every session opened in Liz's working repos (`Make_Skills`, `the-loom`, and any `project-starter`-scaffolded repo). It enforces:
-
-- **PROBE before asserting** — Grep/Read the source before claiming facts about it
-- **Cite `file:line`** — every claim about the codebase carries a citation; the regex accepts `file.ext:line`, bare paths, and `https?://` URLs
-- **Distinguish dev-tooling from runtime** — name which audience each piece of infra serves
-- **Friction-as-memory** — when the user corrects you, write a `feedback` memory at the moment of correction (not after)
-- **Cite skills by name** — when invoking a methodology skill, name it in the response
-- **Architecture snapshots** — `SessionStart` writes a snapshot + diff under `docs/architecture-snapshots/`, and an `architecture-analyst` subagent + `/architecture-report` slash command turn the diff into a narrative
-
-Hooks fire on `UserPromptSubmit`, `PreToolUse`, `Stop`, and `SessionStart`. Scope check is case-insensitive — works regardless of how the repo path is cased. **Being renamed `make-skills-discipline` → `loom-discipline`** as part of the-loom Phase 1; both names work during the transition window.
-
-Unlike the two pure skills above, this plugin is only useful in Liz's repos — its hook scripts assume the Make_Skills/the-loom/project-starter conventions. Distributed here so the install path is one command from any of those repos' CLAUDE.md.
 
 ## Install
 
@@ -66,61 +51,51 @@ In an active Claude Code session, run:
 /plugin marketplace add Lizo-RoadTown/claude-skills-marketplace
 /plugin install onboarding-psychologist@lizo-skills
 /plugin install ai-agents-architect@lizo-skills
-/plugin install make-skills-discipline@lizo-skills
 ```
 
-Verify with `/plugin list`. The discipline plugin starts injecting rules on the next session opened in an in-scope repo (Make_Skills, the-loom, or any project-starter-scaffolded directory).
+Verify with `/plugin list`.
 
 ### Other Agent Skills clients (Cursor, Gemini CLI, OpenCode, etc.)
 
-The two **pure skills** are portable — each client has its own way of registering skills; the [Agent Skills client showcase](https://agentskills.io/clients) links to each one's docs. The skill bodies live at:
+Each client has its own way of registering skills; the
+[Agent Skills client showcase](https://agentskills.io/clients) links to each
+one's docs. The skills themselves are at:
 
 - `plugins/onboarding-psychologist/skills/onboarding-psychologist/`
 - `plugins/ai-agents-architect/skills/ai-agents-architect/`
 
-You can clone this repo and point your client at those directories, or copy the individual skill folders into your client's skills directory (usually something like `~/.<client>/skills/`).
-
-The **discipline plugin** is Claude-Code-only — its hook contract (`hooks.json`, `PreToolUse`/`UserPromptSubmit`/`Stop`/`SessionStart` events) is specific to Claude Code's plugin system. Other clients don't have an equivalent today.
+You can clone this repo and point your client at those directories, or copy
+the individual skill folders into your client's skills directory (usually
+something like `~/.<client>/skills/`).
 
 ### Validation
 
-Validate the **pure skill** formats with the official reference tool from agentskills.io:
+Validate the skill format with the official reference tool from agentskills.io:
 
 ```bash
 npx skills-ref validate ./plugins/onboarding-psychologist/skills/onboarding-psychologist
 npx skills-ref validate ./plugins/ai-agents-architect/skills/ai-agents-architect
 ```
 
-The discipline plugin's skill body (`plugins/make-skills-discipline/skills/make-skills-discipline/`) also validates, but the plugin's load-bearing surface is the hook scripts + manifests — those are exercised by the `pytest` job in `.github/workflows/validate.yml` (runs `python -m unittest discover` against `plugins/*/tests/`).
-
 ## Repo layout
 
 ```text
 claude-skills-marketplace/
 ├── .claude-plugin/
-│   └── marketplace.json                          # the catalog (lists all 3 plugins)
+│   └── marketplace.json                          # the catalog
 ├── plugins/
-│   ├── onboarding-psychologist/                  # pure skill
-│   │   ├── .claude-plugin/plugin.json
-│   │   └── skills/onboarding-psychologist/SKILL.md
-│   ├── ai-agents-architect/                      # pure skill
-│   │   ├── .claude-plugin/plugin.json
-│   │   └── skills/ai-agents-architect/SKILL.md
-│   └── make-skills-discipline/                   # discipline plugin (Claude Code only)
-│       ├── .claude-plugin/plugin.json
-│       ├── skills/make-skills-discipline/SKILL.md
-│       ├── hooks/
-│       │   ├── hooks.json                        # event registration
-│       │   └── run-python.mjs                    # Node launcher for the Python hook scripts
-│       ├── scripts/                              # the hook scripts themselves
-│       │   ├── pre_tool_use.py
-│       │   ├── user_prompt_submit.py
-│       │   ├── stop_audit.py
-│       │   └── session_start.py
-│       ├── agents/architecture-analyst.md        # subagent for /architecture-report
-│       ├── commands/architecture-report.md       # slash command
-│       └── tests/                                # unittest suite (run by validate.yml)
-├── CHANGELOG.md
+│   ├── onboarding-psychologist/
+│   │   ├── .claude-plugin/
+│   │   │   └── plugin.json                       # plugin manifest
+│   │   └── skills/
+│   │       └── onboarding-psychologist/
+│   │           └── SKILL.md                      # the skill itself
+│   └── ai-agents-architect/
+│       ├── .claude-plugin/
+│       │   └── plugin.json
+│       └── skills/
+│           └── ai-agents-architect/
+│               └── SKILL.md
 ├── README.md
 └── LICENSE
 ```
@@ -149,9 +124,8 @@ If you use these skills in research or downstream projects, see [CITATION.cff](C
 
 **[Liz Osborn](https://github.com/Lizo-RoadTown)** (`Lizo-RoadTown`)
 
-- Related: [project-starter](https://github.com/Lizo-RoadTown/project-starter) — the day-1 project scaffolder that references the two pure skills here
-- Related: [Make_Skills](https://github.com/Lizo-RoadTown/Make_Skills) — the engine (agent runtime, skill compilation, model registry) that consumes `make-skills-discipline` for its dev workflow
-- Related: [the-loom](https://github.com/Lizo-RoadTown/the-loom) — cross-project memory + observability + governance; also consumes `make-skills-discipline` (transitioning to `loom-discipline`)
+- Related: [project-starter](https://github.com/Lizo-RoadTown/project-starter) — the day-1 project scaffolder that references these skills
+- Related: [Make_Skills](https://github.com/Lizo-RoadTown/Make_Skills) — Liz's broader skills workshop
 
 ## License
 
