@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "loom-memory": {
+      "type": "http",
+      "url": "https://loom-agent-context.onrender.com/mcp/memory/"
+    }
+  }
+}
