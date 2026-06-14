@@ -33,17 +33,6 @@
       "repository": "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
     },
     {
-      "name": "make-skills-discipline",
-      "source": "./plugins/make-skills-discipline",
-      "description": "Auto-injecting discipline wrapper for Claude Code sessions working in Make_Skills or any project-starter-scaffolded repo. Hook scripts enforce PROBE-first behavior, file:line citation, dev-tooling-vs-runtime distinction, and friction-as-memory writing. Same forcing-function pattern as superpowers:using-superpowers.",
-      "version": "0.1.2",
-      "author": { "name": "Liz Osborn" },
-      "license": "Apache-2.0",
-      "category": "discipline",
-      "tags": ["discipline", "hooks", "agent-behavior", "make-skills", "probe-first", "friction-as-memory"],
-      "repository": "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
-    },
-    {
       "name": "liz-patterns",
       "source": "./plugins/liz-patterns",
       "description": "Liz Osborn's canonical patterns library — ONE home for her reusable agents, skills, and tools. Available in every Claude Code session in every project, so the same pattern means the same thing wherever invoked. Replaces the duplicated copies that previously lived in docs-agent/skills/, Make_Skills/skills/, Make_Skills/skills_private/, the-loom/skills/, and the-loom/skills_private/. Compiled by the recursive-skill-engine loop (see Tapestry MANIFESTO Part 3 Pillar 1).",
