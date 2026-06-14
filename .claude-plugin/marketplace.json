@@ -42,6 +42,17 @@
       "category": "discipline",
       "tags": ["discipline", "hooks", "agent-behavior", "make-skills", "probe-first", "friction-as-memory"],
       "repository": "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
+    },
+    {
+      "name": "liz-patterns",
+      "source": "./plugins/liz-patterns",
+      "description": "Liz Osborn's canonical patterns library — ONE home for her reusable agents, skills, and tools. Available in every Claude Code session in every project, so the same pattern means the same thing wherever invoked. Replaces the duplicated copies that previously lived in docs-agent/skills/, Make_Skills/skills/, Make_Skills/skills_private/, the-loom/skills/, and the-loom/skills_private/. Compiled by the recursive-skill-engine loop (see Tapestry MANIFESTO Part 3 Pillar 1).",
+      "version": "0.1.0",
+      "author": { "name": "Liz Osborn" },
+      "license": "Apache-2.0",
+      "category": "patterns-library",
+      "tags": ["patterns-library", "canonical-home", "agents", "skills", "tools", "recursive-skill-engine", "agency-to-structure"],
+      "repository": "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
     }
   ]
 }
