@@ -1,0 +1,22 @@
+{
+  "name": "liz-patterns-dev",
+  "description": "Development marketplace for liz-patterns. Used for local testing before publishing to the parent marketplace at the repo root.",
+  "owner": {
+    "name": "Liz Osborn",
+    "email": "lizocontactinfo@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "liz-patterns",
+      "description": "Liz Osborn's canonical patterns library — ONE home for her reusable agents, skills, and tools. Available in every Claude Code session in every project.",
+      "version": "0.1.0",
+      "source": "./",
+      "author": {
+        "name": "Liz Osborn"
+      },
+      "license": "Apache-2.0",
+      "category": "patterns-library",
+      "tags": ["patterns-library", "canonical-home", "agents", "skills", "tools", "recursive-skill-engine"]
+    }
+  ]
+}
