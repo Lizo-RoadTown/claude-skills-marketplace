@@ -35,25 +35,12 @@
     {
       "name": "make-skills-discipline",
       "source": "./plugins/make-skills-discipline",
-      "description": "DEPRECATED 2026-06-14 — use loom-discipline instead. This plugin was a subset of loom-discipline; consolidated to honor the one-canonical-home rule (tapestry/MANIFESTO.md Pillar 1). Existing installs continue to work; new installs should use loom-discipline@lizo-skills. Slated for removal in a future marketplace release.",
-      "version": "0.1.5",
-      "deprecated": true,
-      "deprecation_notice": "Use loom-discipline@lizo-skills — same functionality plus the v0.1.7-v0.1.13 features (auto-recall, MCP-registered loom-memory, Stop-hook upskilling check, Phase 2 local observer, LOOM_PROJECT_ID scope gate).",
+      "description": "Auto-injecting discipline wrapper for Claude Code sessions working in Make_Skills or any project-starter-scaffolded repo. Hook scripts enforce PROBE-first behavior, file:line citation, dev-tooling-vs-runtime distinction, and friction-as-memory writing. Same forcing-function pattern as superpowers:using-superpowers.",
+      "version": "0.1.2",
       "author": { "name": "Liz Osborn" },
       "license": "Apache-2.0",
       "category": "discipline",
-      "tags": ["discipline", "hooks", "agent-behavior", "deprecated"],
-      "repository": "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
-    },
-    {
-      "name": "loom-discipline",
-      "source": "./plugins/loom-discipline",
-      "description": "Canonical Claude Code discipline plugin (consolidates the deprecated make-skills-discipline). Auto-injects PROBE-first behavior, file:line citation enforcement, dev-tooling-vs-runtime distinction, friction-as-memory writing. Includes auto-recall on SessionStart, MCP-registers loom-memory at https://loom-agent-context.onrender.com/mcp/memory/, Stop-hook upskilling check (CORE DIRECTIVE 2), Phase 2 local observer (Path A candidates to architecture-registry), and per-project scope gate via LOOM_PROJECT_ID. Emits OTLP events to Grafana Cloud LGTM.",
-      "version": "0.1.13",
-      "author": { "name": "Liz Osborn" },
-      "license": "Apache-2.0",
-      "category": "discipline",
-      "tags": ["discipline", "hooks", "agent-behavior", "loom", "probe-first", "friction-as-memory", "observability", "otel", "loom-memory", "mcp", "concrete-rule"],
+      "tags": ["discipline", "hooks", "agent-behavior", "make-skills", "probe-first", "friction-as-memory"],
       "repository": "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
     },
     {
