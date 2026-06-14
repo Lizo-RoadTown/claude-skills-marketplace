@@ -7,7 +7,7 @@ Project context for Claude Code. Loaded into every session opened in this repo.
 The PUBLIC Claude Code plugin marketplace authored by Liz Osborn (`Lizo-RoadTown`). Hosts 4 plugins:
 
 - **`liz-patterns`** — the canonical patterns library (agents + skills the operator uses across every project)
-- **`make-skills-discipline`** — auto-injecting discipline wrapper for Make_Skills + project-starter-scaffolded repos
+- **`loom-discipline`** — auto-injecting discipline wrapper for Make_Skills, the-loom, Tapestry, and project-starter-scaffolded repos. Published via `lizo-loom` marketplace (sourced from `Lizo-RoadTown/the-loom`), NOT from this repo. The previous `make-skills-discipline` plugin was retired 2026-06-14 — it was a subset of loom-discipline.
 - **`onboarding-psychologist`** — IDENTITY-TO-HABIT framework for first-time-user flows
 - **`ai-agents-architect`** — decision framework for autonomous-agent architecture
 
@@ -28,7 +28,7 @@ Internal layout:
 For sessions working IN this repo (authoring plugins):
 
 ```text
-/plugin install make-skills-discipline@lizo-skills
+/plugin install loom-discipline@lizo-loom
 ```
 
 PROBE before asserting (cite file:line). Distinguish dev-tooling from runtime. Save corrections as feedback memory.
