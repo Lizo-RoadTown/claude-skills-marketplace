@@ -16,7 +16,23 @@ manifest so the skills install with one command in Claude Code.
 
 Both skills are referenced by [project-starter](https://github.com/Lizo-RoadTown/project-starter)'s variant templates. Until now, they had no public install path — this repo fixes that.
 
-## Skills in this marketplace
+## Plugins in this marketplace
+
+### `liz-patterns` ⭐ canonical patterns library
+
+**The ONE home for Liz's reusable agents + skills + tools.** Installed once, available in every Claude Code session in every project — so the same pattern name means the same thing wherever invoked.
+
+Per [tapestry/MANIFESTO.md Part 3 Pillar 1](https://github.com/Lizo-RoadTown/tapestry/blob/main/MANIFESTO.md), every reusable pattern has ONE name, ONE home, available everywhere via reference (not copy). This plugin replaces the duplicated copies that previously lived across docs-agent, Make_Skills, and the-loom.
+
+Contains:
+- **7 agents** — agentic-upskilling (doc wrapper for the deployed self-observer service), eval-deep-research, infrastructure-mapping, lessons-learned, next-actions-planning, orchestration-cataloging, web-app-scaffold
+- **8 skills** — agentic-skill-design, deep-research-pattern, design-evaluation, document-parsing, documentation, layered-explanation, open-source-documentation, proposal-authoring
+
+Compiled by the platform's [recursive-skill-engine loop](https://github.com/Lizo-RoadTown/tapestry/blob/main/MANIFESTO.md): candidates surface via observers, decisions land via policy, engine compiles, results land here.
+
+### `make-skills-discipline`
+
+Auto-injecting discipline wrapper for Claude Code sessions working in Make_Skills or any project-starter-scaffolded repo. Hook scripts enforce PROBE-first behavior, file:line citation, dev-tooling-vs-runtime distinction, and friction-as-memory writing. Same forcing-function pattern as `superpowers:using-superpowers`.
 
 ### `onboarding-psychologist`
 
@@ -49,20 +65,27 @@ In an active Claude Code session, run:
 
 ```text
 /plugin marketplace add Lizo-RoadTown/claude-skills-marketplace
+/plugin install liz-patterns@lizo-skills
+/plugin install make-skills-discipline@lizo-skills
 /plugin install onboarding-psychologist@lizo-skills
 /plugin install ai-agents-architect@lizo-skills
 ```
 
 Verify with `/plugin list`.
 
+**Most important:** `liz-patterns` is the canonical patterns library. Installing it makes every reusable agent + skill available in every project, with one name, behaving consistently. If you install nothing else, install that.
+
 ### Other Agent Skills clients (Cursor, Gemini CLI, OpenCode, etc.)
 
 Each client has its own way of registering skills; the
 [Agent Skills client showcase](https://agentskills.io/clients) links to each
-one's docs. The skills themselves are at:
+one's docs. The skills + agents are at:
 
+- `plugins/liz-patterns/skills/` (8 skills)
+- `plugins/liz-patterns/agents/` (7 agents)
 - `plugins/onboarding-psychologist/skills/onboarding-psychologist/`
 - `plugins/ai-agents-architect/skills/ai-agents-architect/`
+- `plugins/make-skills-discipline/` (skills + hooks)
 
 You can clone this repo and point your client at those directories, or copy
 the individual skill folders into your client's skills directory (usually
@@ -82,20 +105,28 @@ npx skills-ref validate ./plugins/ai-agents-architect/skills/ai-agents-architect
 ```text
 claude-skills-marketplace/
 ├── .claude-plugin/
-│   └── marketplace.json                          # the catalog
+│   └── marketplace.json                          # the catalog (4 plugins)
 ├── plugins/
-│   ├── onboarding-psychologist/
+│   ├── liz-patterns/                             # ⭐ canonical patterns library
 │   │   ├── .claude-plugin/
-│   │   │   └── plugin.json                       # plugin manifest
-│   │   └── skills/
-│   │       └── onboarding-psychologist/
-│   │           └── SKILL.md                      # the skill itself
+│   │   │   ├── plugin.json
+│   │   │   └── marketplace.json                  # dev marketplace for local testing
+│   │   ├── agents/                               # 7 agents (description + capabilities + tools)
+│   │   ├── skills/                               # 8 skills (name + description)
+│   │   └── README.md
+│   ├── make-skills-discipline/
+│   │   ├── .claude-plugin/plugin.json
+│   │   ├── hooks/                                # discipline-enforcement hooks
+│   │   ├── skills/
+│   │   ├── agents/
+│   │   ├── commands/
+│   │   └── scripts/
+│   ├── onboarding-psychologist/
+│   │   ├── .claude-plugin/plugin.json
+│   │   └── skills/onboarding-psychologist/SKILL.md
 │   └── ai-agents-architect/
-│       ├── .claude-plugin/
-│       │   └── plugin.json
-│       └── skills/
-│           └── ai-agents-architect/
-│               └── SKILL.md
+│       ├── .claude-plugin/plugin.json
+│       └── skills/ai-agents-architect/SKILL.md
 ├── README.md
 └── LICENSE
 ```
