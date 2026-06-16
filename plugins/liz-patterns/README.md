@@ -17,6 +17,7 @@ Previously these patterns lived as duplicated copies across `docs-agent/skills/`
 | Agent | What it does |
 |---|---|
 | `agentic-upskilling` | Documentation wrapper for the deployed self-observer service (the-loom/services/self-observer/). Runs as a Render cron — not an interactive invocation. |
+| `drift-watcher` | Read-only oversight agent spawned in background during long multi-repo executions. Watches the primary for drift (per-repo solutions when cross-repo required, enumeration errors, forgetting binding rules, re-creating just-deleted duplicates) and surfaces concerns via memory_write. Does NOT execute work. Added v0.1.1; validated twice in production. |
 | `eval-deep-research` | Runs the deep_research_bench (DRB) harness against a deepagents-produced report set. Scores RACE + FACT. |
 | `infrastructure-mapping` | Maps any project's infrastructure as modules + interfaces + bond strength (Simon-grounded). Produces a map file + identifies silent leaks. |
 | `lessons-learned` | Walks prior chat transcripts to find systematic friction patterns; routes each cluster into intake forms + memory updates. |

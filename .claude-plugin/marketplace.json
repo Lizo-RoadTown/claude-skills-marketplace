@@ -35,8 +35,8 @@
     {
       "name": "liz-patterns",
       "source": "./plugins/liz-patterns",
-      "description": "Liz Osborn's canonical patterns library — ONE home for her reusable agents, skills, and tools. Available in every Claude Code session in every project, so the same pattern means the same thing wherever invoked. Replaces the duplicated copies that previously lived in docs-agent/skills/, Make_Skills/skills/, Make_Skills/skills_private/, the-loom/skills/, and the-loom/skills_private/. Compiled by the recursive-skill-engine loop (see Tapestry MANIFESTO Part 3 Pillar 1).",
-      "version": "0.1.0",
+      "description": "Liz Osborn's canonical patterns library — ONE home for her reusable agents, skills, and tools. Available in every Claude Code session in every project, so the same pattern means the same thing wherever invoked. v0.1.1 (2026-06-16): adds drift-watcher agent — read-only oversight agent for long multi-repo executions, validated in production twice before promotion.",
+      "version": "0.1.1",
       "author": { "name": "Liz Osborn" },
       "license": "Apache-2.0",
       "category": "patterns-library",
