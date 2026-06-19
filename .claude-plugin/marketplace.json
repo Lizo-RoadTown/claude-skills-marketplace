@@ -42,6 +42,17 @@
       "category": "patterns-library",
       "tags": ["patterns-library", "canonical-home", "agents", "skills", "tools", "recursive-skill-engine", "agency-to-structure"],
       "repository": "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
+    },
+    {
+      "name": "sde-extraction-guard",
+      "source": "./plugins/sde-extraction-guard",
+      "description": "Repo-specific schema guard for SDE_Extraction, hook-enforced: a PostToolUse hook runs the repo's scripts/check_schema.py after edits to the extraction surface and blocks a broken schema (the class of bug that crash-looped the worker). Bundles the recorded-transformation discipline skill. Complements loom-discipline (generic drift + architecture snapshots); no-ops in repos that don't have the SDE schema.",
+      "version": "0.1.0",
+      "author": { "name": "Liz Osborn" },
+      "license": "Apache-2.0",
+      "category": "discipline",
+      "tags": ["discipline", "hooks", "schema-guard", "sde-extraction", "recorded-transformation"],
+      "repository": "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
     }
   ]
 }
