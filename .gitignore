@@ -11,6 +11,7 @@ Thumbs.db
 
 # Local Claude Code state (if any)
 .claude.local.md
+.claude/
 
 # Node (if any tooling ever lands here)
 node_modules/
