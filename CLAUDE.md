@@ -4,63 +4,61 @@ Project context for Claude Code. Loaded into every session opened in this repo.
 
 ## What this repo is
 
-The PUBLIC Claude Code plugin marketplace authored by Liz Osborn (`Lizo-RoadTown`). Hosts 4 plugins:
+The PUBLIC Claude Code plugin marketplace (`lizo-skills`) authored by Liz Osborn
+(`Lizo-RoadTown`). It is the distribution channel for **tool-agnostic,
+general-purpose** skills that follow the open Agent Skills standard and work
+across any compatible agent. Hosts 3 plugins:
 
-- **`liz-patterns`** — the canonical patterns library (agents + skills the operator uses across every project)
-- **`loom-discipline`** — auto-injecting discipline wrapper for Make_Skills, the-loom, Tapestry, and project-starter-scaffolded repos. Published via `lizo-loom` marketplace (sourced from `Lizo-RoadTown/the-loom`), NOT from this repo. The previous `make-skills-discipline` plugin was retired 2026-06-14 — it was a subset of loom-discipline.
 - **`onboarding-psychologist`** — IDENTITY-TO-HABIT framework for first-time-user flows
 - **`ai-agents-architect`** — decision framework for autonomous-agent architecture
+- **`sde-extraction-guard`** — repo-specific PostToolUse schema guard for `SDE_Extraction`
 
-## Where the canonical patterns live
+## What is NOT here (moved to Tapestry)
 
-In THIS repo: `plugins/liz-patterns/` is THE canonical home for the operator's reusable agents + skills + tools per [tapestry/MANIFESTO.md Pillar 1](https://github.com/Lizo-RoadTown/tapestry/blob/main/MANIFESTO.md). Changes to canonical agents/skills land here, not in any consuming repo's local `skills/` directory.
+The operator's **platform-coupled** plugins were consolidated into the
+[Tapestry](https://github.com/Lizo-RoadTown/tapestry) monorepo (Step-8,
+2026-06-22) because their agents/hooks depend on the loom-memory MCP and the
+Tapestry runtime. They install from the `tapestry` marketplace, not here:
 
-Internal layout:
+- **`liz-patterns` → `tapestry-patterns@tapestry`** — the operator's canonical
+  reusable agents + skills (the "one home" per MANIFESTO Pillar 1).
+- **`loom-discipline` / `make-skills-discipline` → `tapestry-discipline@tapestry`** —
+  the PROBE-first discipline hooks.
 
-- `plugins/liz-patterns/agents/` — 7 agent files with `description + capabilities + tools` frontmatter
-- `plugins/liz-patterns/skills/` — 8 skills with `name + description` frontmatter
-- `plugins/liz-patterns/.claude-plugin/plugin.json` — manifest
-- `plugins/liz-patterns/.claude-plugin/marketplace.json` — dev marketplace for local testing
-- `plugins/liz-patterns/README.md` — what's in it + the one exception + install
+Why the split (and why these three stay public): the
+[Tapestry plugin map](https://github.com/Lizo-RoadTown/tapestry/blob/main/docs/architecture/plugin-map.md).
+Do NOT re-add `liz-patterns` or a discipline plugin to this repo — that would
+re-create the duplication Pillar 1 forbids.
 
-## Discipline plugin
-
-For sessions working IN this repo (authoring plugins):
-
-```text
-/plugin install loom-discipline@lizo-loom
-```
-
-PROBE before asserting (cite file:line). Distinguish dev-tooling from runtime. Save corrections as feedback memory.
-
-## Canonical patterns (operator's own library — installable from this repo)
+## Discipline for sessions in this repo
 
 ```text
-/plugin install liz-patterns@lizo-skills
+/plugin marketplace add Lizo-RoadTown/tapestry
+/plugin install tapestry-discipline@tapestry
 ```
 
-This makes the operator's reusable agents + skills available in this session too:
-
-- **Agents**: `liz-patterns:infrastructure-mapping`, `next-actions-planning`, `lessons-learned`, `orchestration-cataloging`, `eval-deep-research`, `web-app-scaffold`, `agentic-upskilling`
-- **Skills**: `liz-patterns:agentic-skill-design`, `deep-research-pattern`, `design-evaluation`, `documentation`, `document-parsing`, `layered-explanation`, `open-source-documentation`, `proposal-authoring`
+PROBE before asserting (cite file:line). Distinguish dev-tooling from runtime.
+Save corrections as feedback memory.
 
 ## Releasing a new plugin version
 
-Per `CONTRIBUTING.md`:
-
 1. Bump `version` in `plugins/<name>/.claude-plugin/plugin.json`
-2. Bump matching entry in `.claude-plugin/marketplace.json`
-3. Open PR + merge (the marketplace uses PRs for changes; see PR #5, #6, #8 for examples)
+2. Bump the matching entry in `.claude-plugin/marketplace.json`
+3. Open PR + merge (the marketplace uses PRs for changes)
 4. Consumers: `/plugin marketplace update` + `/plugin update`
 
 ## Plugin spec reference
 
-Authoring conventions follow the Claude Code plugin spec — verify against `~/.claude/plugins/cache/superpowers-marketplace/superpowers-developing-for-claude-code/*/skills/developing-claude-code-plugins/references/plugin-structure.md` when adding new components.
+Authoring conventions follow the Claude Code plugin spec — verify against
+`~/.claude/plugins/cache/superpowers-marketplace/superpowers-developing-for-claude-code/*/skills/developing-claude-code-plugins/references/plugin-structure.md`
+when adding new components.
 
 ## Tone
 
-Plain, direct, descriptive. No marketing voice ("the unlock," "delightful," "exciting"). No self-congratulation. No defensive contrasts.
+Plain, direct, descriptive. No marketing voice ("the unlock," "delightful,"
+"exciting"). No self-congratulation. No defensive contrasts.
 
 ## License
 
-Apache 2.0 — every plugin authored here ships under Apache 2.0. PR authors agree to this by contributing.
+Apache 2.0 — every plugin authored here ships under Apache 2.0. PR authors agree
+to this by contributing.

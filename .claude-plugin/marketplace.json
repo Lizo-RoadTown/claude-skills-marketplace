@@ -33,17 +33,6 @@
       "repository": "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
     },
     {
-      "name": "liz-patterns",
-      "source": "./plugins/liz-patterns",
-      "description": "Liz Osborn's canonical patterns library — ONE home for her reusable agents, skills, and tools. Available in every Claude Code session in every project, so the same pattern means the same thing wherever invoked. v0.1.1 (2026-06-16): adds drift-watcher agent — read-only oversight agent for long multi-repo executions, validated in production twice before promotion.",
-      "version": "0.1.1",
-      "author": { "name": "Liz Osborn" },
-      "license": "Apache-2.0",
-      "category": "patterns-library",
-      "tags": ["patterns-library", "canonical-home", "agents", "skills", "tools", "recursive-skill-engine", "agency-to-structure"],
-      "repository": "https://github.com/Lizo-RoadTown/claude-skills-marketplace"
-    },
-    {
       "name": "sde-extraction-guard",
       "source": "./plugins/sde-extraction-guard",
       "description": "Repo-specific schema guard for SDE_Extraction, hook-enforced: a PostToolUse hook runs the repo's scripts/check_schema.py after edits to the extraction surface and blocks a broken schema (the class of bug that crash-looped the worker). Bundles the recorded-transformation discipline skill. Complements loom-discipline (generic drift + architecture snapshots); no-ops in repos that don't have the SDE schema.",
