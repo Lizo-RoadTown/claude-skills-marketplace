@@ -14,29 +14,17 @@ agent — **Claude Code, Cursor, Gemini CLI, OpenCode, Junie, Goose, Amp**, and
 [plugin marketplace](https://docs.claude.com/en/docs/claude-code/plugin-marketplaces)
 manifest so the skills install with one command in Claude Code.
 
-Both skills are referenced by [project-starter](https://github.com/Lizo-RoadTown/project-starter)'s variant templates. Until now, they had no public install path — this repo fixes that.
+This is the **public distribution channel** for Liz's tool-agnostic,
+general-purpose skills. The operator's own platform-coupled patterns and
+discipline hooks live in the [Tapestry](https://github.com/Lizo-RoadTown/tapestry)
+monorepo, not here — see [Moved out of this repo](#moved-out-of-this-repo).
 
 ## Plugins in this marketplace
 
-### `liz-patterns` ⭐ canonical patterns library
-
-**The ONE home for Liz's reusable agents + skills + tools.** Installed once, available in every Claude Code session in every project — so the same pattern name means the same thing wherever invoked.
-
-Per [tapestry/MANIFESTO.md Part 3 Pillar 1](https://github.com/Lizo-RoadTown/tapestry/blob/main/MANIFESTO.md), every reusable pattern has ONE name, ONE home, available everywhere via reference (not copy). This plugin replaces the duplicated copies that previously lived across docs-agent, Make_Skills, and the-loom.
-
-Contains:
-- **7 agents** — agentic-upskilling (doc wrapper for the deployed self-observer service), eval-deep-research, infrastructure-mapping, lessons-learned, next-actions-planning, orchestration-cataloging, web-app-scaffold
-- **8 skills** — agentic-skill-design, deep-research-pattern, design-evaluation, document-parsing, documentation, layered-explanation, open-source-documentation, proposal-authoring
-
-Compiled by the platform's [recursive-skill-engine loop](https://github.com/Lizo-RoadTown/tapestry/blob/main/MANIFESTO.md): candidates surface via observers, decisions land via policy, engine compiles, results land here.
-
-### `make-skills-discipline`
-
-Auto-injecting discipline wrapper for Claude Code sessions working in Make_Skills or any project-starter-scaffolded repo. Hook scripts enforce PROBE-first behavior, file:line citation, dev-tooling-vs-runtime distinction, and friction-as-memory writing. Same forcing-function pattern as `superpowers:using-superpowers`.
-
 ### `onboarding-psychologist`
 
-A behavioral-research framework for designing first-time-user experiences using the **IDENTITY-TO-HABIT arc**:
+A behavioral-research framework for designing first-time-user experiences using
+the **IDENTITY-TO-HABIT arc**:
 
 1. Define the first win
 2. Remove unnecessary setup
@@ -44,7 +32,10 @@ A behavioral-research framework for designing first-time-user experiences using 
 4. Attach a stable cue
 5. Reinforce identity
 
-Grounded in BJ Fogg's Tiny Habits and James Clear's identity-based habits. Activates on signup flows, empty states, welcome screens, and reactivation work. Refuses to produce feature tours, "12 things to know" walls, and CRUD-form empty states.
+Grounded in BJ Fogg's Tiny Habits and James Clear's identity-based habits.
+Activates on signup flows, empty states, welcome screens, and reactivation work.
+Refuses to produce feature tours, "12 things to know" walls, and CRUD-form empty
+states.
 
 ### `ai-agents-architect`
 
@@ -55,7 +46,37 @@ A decision framework for autonomous-agent architecture:
 - **Single agent or multiple?** (Most common mistake: splitting agents without a real reason.)
 - **When to introduce an orchestrator?**
 
-Activates on agent-design and orchestration questions. Refuses tool overload, infinite tool loops without a cap, and unverified multi-agent splits.
+Activates on agent-design and orchestration questions. Refuses tool overload,
+infinite tool loops without a cap, and unverified multi-agent splits.
+
+### `sde-extraction-guard`
+
+A repo-specific schema guard for `SDE_Extraction`: a PostToolUse hook runs the
+repo's `scripts/check_schema.py` after edits to the extraction surface and blocks
+a broken schema (the class of bug that crash-looped the worker). Bundles the
+`recorded-transformation` discipline skill. No-ops in repos that don't have the
+SDE schema.
+
+## Moved out of this repo
+
+Two plugins that used to live here were consolidated into the Tapestry monorepo
+(Step-8 consolidation, 2026-06-22) because they are **platform-coupled** — their
+agents/hooks depend on the loom-memory MCP and the Tapestry runtime. Install them
+from the tapestry marketplace instead:
+
+- **`liz-patterns` → `tapestry-patterns@tapestry`** — the operator's canonical
+  reusable agents + skills (the "one home" per MANIFESTO Pillar 1).
+- **`make-skills-discipline` / `loom-discipline` → `tapestry-discipline@tapestry`** —
+  the PROBE-first discipline hooks.
+
+```text
+/plugin marketplace add Lizo-RoadTown/tapestry
+/plugin install tapestry-patterns@tapestry
+/plugin install tapestry-discipline@tapestry
+```
+
+See the [Tapestry plugin map](https://github.com/Lizo-RoadTown/tapestry/blob/main/docs/architecture/plugin-map.md)
+for why each plugin lives where it does.
 
 ## Install
 
@@ -65,27 +86,22 @@ In an active Claude Code session, run:
 
 ```text
 /plugin marketplace add Lizo-RoadTown/claude-skills-marketplace
-/plugin install liz-patterns@lizo-skills
-/plugin install make-skills-discipline@lizo-skills
 /plugin install onboarding-psychologist@lizo-skills
 /plugin install ai-agents-architect@lizo-skills
+/plugin install sde-extraction-guard@lizo-skills
 ```
 
 Verify with `/plugin list`.
-
-**Most important:** `liz-patterns` is the canonical patterns library. Installing it makes every reusable agent + skill available in every project, with one name, behaving consistently. If you install nothing else, install that.
 
 ### Other Agent Skills clients (Cursor, Gemini CLI, OpenCode, etc.)
 
 Each client has its own way of registering skills; the
 [Agent Skills client showcase](https://agentskills.io/clients) links to each
-one's docs. The skills + agents are at:
+one's docs. The skills are at:
 
-- `plugins/liz-patterns/skills/` (8 skills)
-- `plugins/liz-patterns/agents/` (7 agents)
 - `plugins/onboarding-psychologist/skills/onboarding-psychologist/`
 - `plugins/ai-agents-architect/skills/ai-agents-architect/`
-- `plugins/make-skills-discipline/` (skills + hooks)
+- `plugins/sde-extraction-guard/skills/`
 
 You can clone this repo and point your client at those directories, or copy
 the individual skill folders into your client's skills directory (usually
@@ -105,28 +121,18 @@ npx skills-ref validate ./plugins/ai-agents-architect/skills/ai-agents-architect
 ```text
 claude-skills-marketplace/
 ├── .claude-plugin/
-│   └── marketplace.json                          # the catalog (4 plugins)
+│   └── marketplace.json                          # the catalog (3 plugins)
 ├── plugins/
-│   ├── liz-patterns/                             # ⭐ canonical patterns library
-│   │   ├── .claude-plugin/
-│   │   │   ├── plugin.json
-│   │   │   └── marketplace.json                  # dev marketplace for local testing
-│   │   ├── agents/                               # 7 agents (description + capabilities + tools)
-│   │   ├── skills/                               # 8 skills (name + description)
-│   │   └── README.md
-│   ├── make-skills-discipline/
-│   │   ├── .claude-plugin/plugin.json
-│   │   ├── hooks/                                # discipline-enforcement hooks
-│   │   ├── skills/
-│   │   ├── agents/
-│   │   ├── commands/
-│   │   └── scripts/
 │   ├── onboarding-psychologist/
 │   │   ├── .claude-plugin/plugin.json
 │   │   └── skills/onboarding-psychologist/SKILL.md
-│   └── ai-agents-architect/
+│   ├── ai-agents-architect/
+│   │   ├── .claude-plugin/plugin.json
+│   │   └── skills/ai-agents-architect/SKILL.md
+│   └── sde-extraction-guard/
 │       ├── .claude-plugin/plugin.json
-│       └── skills/ai-agents-architect/SKILL.md
+│       ├── hooks/
+│       └── skills/
 ├── README.md
 └── LICENSE
 ```
@@ -155,8 +161,8 @@ If you use these skills in research or downstream projects, see [CITATION.cff](C
 
 **[Liz Osborn](https://github.com/Lizo-RoadTown)** (`Lizo-RoadTown`)
 
+- Related: [Tapestry](https://github.com/Lizo-RoadTown/tapestry) — the monorepo that hosts the platform-coupled plugins (`tapestry-patterns`, `tapestry-discipline`)
 - Related: [project-starter](https://github.com/Lizo-RoadTown/project-starter) — the day-1 project scaffolder that references these skills
-- Related: [Make_Skills](https://github.com/Lizo-RoadTown/Make_Skills) — Liz's broader skills workshop
 
 ## License
 
