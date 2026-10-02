@@ -45,7 +45,7 @@
     },
     {
       "name": "lens-log",
-      "source": { "source": "git-subdir", "url": "Lizo-RoadTown/lens-core", "path": "plugins/lens-log" },
+      "source": { "source": "git-subdir", "url": "https://github.com/Lizo-RoadTown/lens-core.git", "path": "plugins/lens-log" },
       "description": "Enforced, file-based log of decomposition work for The Lens repos: a PostToolUse + Stop hook pair blocks a turn that touched a surface declared in the repo's decomposition.json until a log entry (with Lessons) covers it. Code lives in lens-core; enable per project. No-ops in repos without decomposition.json.",
       "version": "0.1.0",
       "author": { "name": "Liz Osborn" },
