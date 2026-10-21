@@ -47,7 +47,7 @@
       "name": "lens-log",
       "source": { "source": "git-subdir", "url": "https://github.com/Lizo-RoadTown/surveyor.git", "path": "plugins/lens-log" },
       "description": "Enforced, file-based log of decomposition work for The Lens repos: a PostToolUse + Stop hook pair blocks a turn that touched a surface declared in the repo's decomposition.json until a log entry (with Lessons) covers it. Code lives in Surveyor (the decomposition component); enable per project. No-ops in repos without decomposition.json.",
-      "version": "0.1.3",
+      "version": "0.1.4",
       "author": { "name": "Liz Osborn" },
       "license": "Apache-2.0",
       "category": "discipline",
