@@ -18,3 +18,6 @@ node_modules/
 # Python bytecode (plugin tests)
 __pycache__/
 *.pyc
+
+# Never commit credentials
+.env
